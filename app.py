@@ -9,7 +9,7 @@ st.set_page_config(page_title="Toxic Comment Filter")
 
 st.title("📱 Social Media Toxic Comment Filter")
 
-# 🔥 Highlight function (NEW)
+# 🔥 Highlight toxic words
 def highlight_toxic_words(text):
     toxic_words = ["hate", "stupid", "idiot", "shut up"]
     words = text.split()
@@ -22,6 +22,19 @@ def highlight_toxic_words(text):
             result.append(w)
 
     return " ".join(result)
+
+# 🔥 Emotion detection
+def detect_emotion(text):
+    text = text.lower()
+
+    if "hate" in text or "stupid" in text or "idiot" in text:
+        return "😡 Angry"
+    elif "love" in text or "amazing" in text or "great" in text:
+        return "😊 Happy"
+    elif "sad" in text or "bad" in text:
+        return "😢 Sad"
+    else:
+        return "😐 Neutral"
 
 
 comments = st.text_area("Paste comments (one per line):")
@@ -39,13 +52,18 @@ if st.button("Analyze"):
 
             st.markdown(f"**👤 User{i+1}**")
 
-            # Original text
+            # Original comment
             st.write(c)
 
-            # 🔥 Highlighted text (NEW)
+            # Highlighted text
             st.markdown("**Highlighted:**")
             st.write(highlight_toxic_words(c))
 
+            # Emotion detection
+            emotion = detect_emotion(c)
+            st.info(f"Emotion: {emotion}")
+
+            # Toxic prediction
             if pred == 1:
                 st.error(f"😡 Toxic ({prob*100:.1f}%)")
             else:
