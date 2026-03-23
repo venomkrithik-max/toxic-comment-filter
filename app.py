@@ -1,5 +1,6 @@
 import streamlit as st
 import pickle
+import matplotlib.pyplot as plt
 
 # Load model
 model = pickle.load(open("model.pkl", "rb"))
@@ -44,6 +45,10 @@ if st.button("Analyze"):
 
     st.markdown("## 💬 Comments Feed")
 
+    # 🔥 Counters for dashboard
+    toxic_count = 0
+    non_toxic_count = 0
+
     for i, c in enumerate(comment_list):
         if c.strip() != "":
             data = vectorizer.transform([c])
@@ -63,10 +68,23 @@ if st.button("Analyze"):
             emotion = detect_emotion(c)
             st.info(f"Emotion: {emotion}")
 
-            # Toxic prediction
+            # Toxic prediction + count
             if pred == 1:
+                toxic_count += 1
                 st.error(f"😡 Toxic ({prob*100:.1f}%)")
             else:
+                non_toxic_count += 1
                 st.success("🙂 Not Toxic")
 
             st.markdown("---")
+
+    # 🔥 Dashboard
+    st.markdown("## 📊 Summary Dashboard")
+
+    labels = ['Toxic', 'Non-Toxic']
+    values = [toxic_count, non_toxic_count]
+
+    fig, ax = plt.subplots()
+    ax.bar(labels, values)
+
+    st.pyplot(fig)
