@@ -9,6 +9,21 @@ st.set_page_config(page_title="Toxic Comment Filter")
 
 st.title("📱 Social Media Toxic Comment Filter")
 
+# 🔥 Highlight function (NEW)
+def highlight_toxic_words(text):
+    toxic_words = ["hate", "stupid", "idiot", "shut up"]
+    words = text.split()
+    result = []
+
+    for w in words:
+        if w.lower() in toxic_words:
+            result.append(f"🔴 {w}")
+        else:
+            result.append(w)
+
+    return " ".join(result)
+
+
 comments = st.text_area("Paste comments (one per line):")
 
 if st.button("Analyze"):
@@ -23,7 +38,13 @@ if st.button("Analyze"):
             prob = model.predict_proba(data)[0][1]
 
             st.markdown(f"**👤 User{i+1}**")
+
+            # Original text
             st.write(c)
+
+            # 🔥 Highlighted text (NEW)
+            st.markdown("**Highlighted:**")
+            st.write(highlight_toxic_words(c))
 
             if pred == 1:
                 st.error(f"😡 Toxic ({prob*100:.1f}%)")
