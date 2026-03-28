@@ -10,9 +10,13 @@ st.set_page_config(page_title="Toxic Comment Filter")
 
 st.title("📱 Social Media Toxic Comment Filter")
 
-# 🔥 Highlight toxic words
+# 🔥 Highlight toxic words (UPDATED LIST)
 def highlight_toxic_words(text):
-    toxic_words = ["hate", "stupid", "idiot", "shut up"]
+    toxic_words = [
+        "hate", "stupid", "idiot", "shut up",
+        "dumb", "worst", "nonsense", "annoying"
+    ]
+
     words = text.split()
     result = []
 
@@ -28,11 +32,11 @@ def highlight_toxic_words(text):
 def detect_emotion(text):
     text = text.lower()
 
-    if "hate" in text or "stupid" in text or "idiot" in text:
+    if any(word in text for word in ["hate", "stupid", "idiot", "dumb"]):
         return "😡 Angry"
-    elif "love" in text or "amazing" in text or "great" in text:
+    elif any(word in text for word in ["love", "amazing", "great"]):
         return "😊 Happy"
-    elif "sad" in text or "bad" in text:
+    elif any(word in text for word in ["sad", "bad"]):
         return "😢 Sad"
     else:
         return "😐 Neutral"
